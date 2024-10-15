@@ -2,8 +2,11 @@ import { mdiReact } from '@mdi/js';
 import Icon from '@mdi/react';
 import React from 'react';
 import { COLOR } from '../utils/type';
+import PropTypes from 'prop-types';
 
-function ChatRoomBar() {
+function ChatRoomBar({formState, switchAiType, modelMap}) {
+    console.log(formState);
+    
   return (
     <nav className="d-flex justify-content-between align-items-center position-fixed top-0 p-2 w-100 border border-bottom">
         <div className="d-flex align-items-center">
@@ -12,13 +15,17 @@ function ChatRoomBar() {
             </div>
             <div className="ms-2">
                 <h6 className="mb-0">Chat Room</h6>
-                <select>
-                    <option value="open_ai_simple">open ai simple</option>
-                    <option value="ollama_simple">ollama simple</option>
-                    <option value="open_ai_assistant">open ai assistant</option>
-                    <option value="ollama_assistant">ollama assistant</option>
-                    <option value="open_ai_rag">open ai rag</option>
-                    <option value="ollama_rag">ollama rag</option>
+                <select
+                    name="aiType"
+                    value={formState.inputs.aiType.value}
+                    onChange={(e) => {
+                        switchAiType(e);
+                    }}
+                    className="form-select"
+                >
+                    {modelMap.map((model) => (
+                        <option value={model.name} key={model.name}>{model.name}</option>
+                    ))}
                 </select>
             </div>
         </div>
@@ -28,5 +35,11 @@ function ChatRoomBar() {
     </nav>
   );
 }
+
+ChatRoomBar.propTypes = {
+    formState: PropTypes.object,
+    switchAiType: PropTypes.func,
+    modelMap: PropTypes.array,
+};
 
 export default ChatRoomBar;

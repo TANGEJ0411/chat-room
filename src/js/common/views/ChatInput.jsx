@@ -1,24 +1,30 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-function ChatInput({setMsgList}) {
-
-  const [message, setMessage] = useState('');
+function ChatInput({formState, handleChange, addMessage, callAiModels}) {
 
   const handleSend = useCallback((e) => {
     e.preventDefault();
+    const {inputs: {
+      message: {
+        value: message,
+      },
+    }} = formState;
     if (message) {
-      setMsgList((prev) => [...prev, {text: message, type: 'user'}]);
-      setMessage('');
+      addMessage(message, 'user');
     }
-  },[message, setMsgList]);
+    handleChange('message', '');
+
+    callAiModels(message);
+  },[formState, handleChange, callAiModels, addMessage]);
 
   return (
     <div className="position-fixed bottom-0 w-100 p-3 bg-light">
       <form className="input-group" onSubmit={handleSend}>
         <input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={formState.inputs.message.value}
+          onChange={handleChange}
+          name='message'
           type="text"
           className="form-control"
           placeholder="Type a message"
@@ -33,7 +39,10 @@ function ChatInput({setMsgList}) {
 }
 
 ChatInput.propTypes = {
-  setMsgList: PropTypes.func,
+  formState: PropTypes.object,
+  handleChange: PropTypes.func,
+  addMessage: PropTypes.func,
+  callAiModels: PropTypes.func,
 };
 
 export default ChatInput;
