@@ -54,19 +54,16 @@ function ChatRoomPage() {
 
   const callAiModels = useCallback(async (msg) => {
     const aiType = formState.inputs.aiType.value;
-    // const url = modelMap.find(model => model.name === aiType).url;
+    const url = modelMap.find(model => model.name === aiType).url;
     try {
       const response = await axios({
         method: 'POST',
-        url: 'https://cors-anywhere.herokuapp.com/https://api.openai.com/v1/chat/completions',
+        url: `http://localhost:8080/model/${url}`,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
         },
         data: {
-          "model": "gpt-3.5-turbo",
-          "messages": [{"role": "user", "content": msg}],
-          "temperature": 0.7,
+          "messages": msg,
         },
       });
       const data = await response.json();
