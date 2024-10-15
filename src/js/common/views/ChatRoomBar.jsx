@@ -5,7 +5,6 @@ import { COLOR } from '../utils/type';
 import PropTypes from 'prop-types';
 
 function ChatRoomBar({formState, switchAiType, modelMap}) {
-    console.log(formState);
     
   return (
     <nav className="d-flex justify-content-between align-items-center position-fixed top-0 p-2 w-100 border border-bottom">
