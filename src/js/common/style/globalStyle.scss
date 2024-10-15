@@ -1,0 +1,67 @@
+@use '../../../../node_modules/bootstrap//scss/bootstrap.scss';
+@use './mixins.scss' as mixins;
+@import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
+
+// Global Styles ----------------------------- //
+* {
+  box-sizing: border-box;
+}
+::selection {}
+
+html {
+  font-family: "Helvetica Neue", Helvetica, Arial, "微軟正黑體", "Microsoft JhengHei", sans-serif;
+  scroll-behavior: smooth;
+}
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, "微軟正黑體", "Microsoft JhengHei", sans-serif;
+  font-size: mixins.$default-font;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+}
+// header avatar
+.avatar-box{
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.msg-container{
+  position: absolute;
+  top: 82px;
+  bottom: 70px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  // min-height: calc(100vh - 82px - 70px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: auto;
+  align-content: start;
+  overflow-y: auto; /* 垂直方向的自動滾動 */
+  overflow-x: hidden; /* 隱藏水平滾動條，防止水平溢出 */
+  .chat-bubble{
+    max-width: 50%; /* 限制氣泡的最大寬度為 50% */
+    word-wrap: break-word; /* 長單詞會換行 */
+    word-break: break-word; /* 控制單詞換行方式 */
+    align-self: start; /* 保持項目根據內容的高度 */
+  }
+  .chat-bubble.user{
+    grid-column: 1 / 3; /* 對方的訊息放在左邊 */
+    justify-self: end; /* 對齊到右邊 */
+  }
+  .chat-bubble.bot{
+    grid-column: 1 / 3; /* 對方的訊息放在左邊 */
+    justify-self: start; /* 對齊到左邊 */
+  }
+}
