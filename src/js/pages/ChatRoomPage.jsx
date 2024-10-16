@@ -55,18 +55,25 @@ function ChatRoomPage() {
   const callAiModels = useCallback(async (msg) => {
     const aiType = formState.inputs.aiType.value;
     // const url = modelMap.find(model => model.name === aiType).url;
+
+    
     try {
       const response = await axios({
         method: 'POST',
-        url: 'https://cors-anywhere.herokuapp.com/https://api.openai.com/v1/chat/completions',
+        url: 'https://cors-anywhere.herokuapp.com/https://api.anthropic.com/v1/messages',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          'anthropic-version': '2023-06-01',
+          // 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          'x-api-key': process.env.REACT_APP_CLAUDE_AI_KEY,
+          "anthropic-dangerous-direct-browser-access": "true"
         },
         data: {
-          "model": "gpt-3.5-turbo",
+          // "model": "gpt-3.5-turbo",
+          "model": "claude-3-5-sonnet-20240620",
+          "max_tokens": 1024,
           "messages": [{"role": "user", "content": msg}],
-          "temperature": 0.7,
+          // "temperature": 0.7,
         },
       });
       const data = await response.json();
