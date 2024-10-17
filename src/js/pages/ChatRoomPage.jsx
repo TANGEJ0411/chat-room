@@ -10,7 +10,7 @@ const modelMap = [
   { name: "ollamaSimple", url: "simple/ollama" },
   { name: "openAiAssistant", url: "assistant/openAI" },
   { name: "ollamaAssistant", url: "assistant/ollama" },
-  { name: "ollaopenAiRagmaRag", url: "rag/openAI" },
+  { name: "openAiRag", url: "rag/openAI" },
   { name: "ollamaRag", url: "rag/ollama" },
 ];
 
