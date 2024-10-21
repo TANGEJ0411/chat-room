@@ -4,13 +4,14 @@ import ChatInput from '../common/views/ChatInput';
 import ChatBubble from '../common/views/ChatBubble';
 import useForm from '../common/hooks/useForm';
 import axios from 'axios';
+import usePageLoading from '../common/hooks/usePageLoading';
 
 const modelMap = [
   { name: "openAiSimple", url: "simple/openAI" },
   { name: "ollamaSimple", url: "simple/ollama" },
   { name: "openAiAssistant", url: "assistant/openAI" },
   { name: "ollamaAssistant", url: "assistant/ollama" },
-  { name: "ollaopenAiRagmaRag", url: "rag/openAI" },
+  { name: "openAiRag", url: "rag/openAI" },
   { name: "ollamaRag", url: "rag/ollama" },
 ];
 
@@ -31,6 +32,13 @@ const initialFormData = {
 function ChatRoomPage() {
 
   const [formState, inputHandler] = useForm(initialFormData);
+
+  const {isPageLoading, runPageLoading, stopPageLoading} = usePageLoading(false, false);
+
+  useEffect(() => {
+    console.log('isPageLoading' + isPageLoading);
+    
+  }, [isPageLoading]);
 
   const messageRef = useRef(initialRef);
 
@@ -56,7 +64,7 @@ function ChatRoomPage() {
     const aiType = formState.inputs.aiType.value;
     // const url = modelMap.find(model => model.name === aiType).url;
 
-    
+    runPageLoading();
     try {
       const response = await axios({
         method: 'POST',
@@ -72,13 +80,15 @@ function ChatRoomPage() {
       
       messageRef.current[aiType].push({text: response.data.message, type: 'bot'});
       setMsgList([...messageRef.current[aiType]]);
+      stopPageLoading();
       // return data;
     } catch (error) {
       console.error('Error:', error);
       messageRef.current[aiType].push({text: error.message, type: 'bot'});
       setMsgList([...messageRef.current[aiType]]);
+      stopPageLoading();
     }
-  }, [formState.inputs.aiType.value]);
+  }, [formState.inputs.aiType.value, runPageLoading, stopPageLoading]);
 
   useEffect(() => {
     const msgContainer = document.querySelector('.msg-container');
@@ -93,7 +103,7 @@ function ChatRoomPage() {
             <ChatBubble key={index} text={msg.text} type={msg.type} />
         ))}
       </div>
-      <ChatInput formState={formState} handleChange={handleChange} callAiModels={callAiModels} messageRef={messageRef} setMsgList={setMsgList}/>
+      <ChatInput formState={formState} handleChange={handleChange} callAiModels={callAiModels} messageRef={messageRef} setMsgList={setMsgList} isPageLoading={isPageLoading} />
     </div>
   );
 }
