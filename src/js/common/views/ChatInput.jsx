@@ -1,9 +1,14 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-function ChatInput({formState, handleChange, callAiModels, messageRef, setMsgList}) {
+function ChatInput({formState, handleChange, callAiModels, messageRef, setMsgList, isPageLoading}) {
 
   const handleSend = useCallback((e) => {
+    if(isPageLoading) {
+      console.log('stop');
+      
+      return;
+    }
     e.preventDefault();
     const {inputs: {
       message: {
@@ -23,7 +28,7 @@ function ChatInput({formState, handleChange, callAiModels, messageRef, setMsgLis
     handleChange('message', '');
 
     callAiModels(message);
-  },[formState, handleChange, callAiModels, messageRef, setMsgList]);
+  },[isPageLoading, formState, handleChange, callAiModels, messageRef, setMsgList]);
 
   return (
     <div className="position-fixed bottom-0 w-100 p-3 bg-light">
@@ -37,8 +42,8 @@ function ChatInput({formState, handleChange, callAiModels, messageRef, setMsgLis
           placeholder="Type a message"
           aria-label="Message input"
         />
-        <button className="btn btn-primary" type="button" onClick={handleSend}>
-          Send
+        <button className={`btn btn-${isPageLoading ? 'danger' : 'primary'}`} type="button" onClick={handleSend}>
+          {isPageLoading ? 'loading' : 'Send'}
         </button>
       </form>
     </div>
@@ -52,6 +57,7 @@ ChatInput.propTypes = {
   callAiModels: PropTypes.func,
   messageRef: PropTypes.object,
   setMsgList: PropTypes.func,
+  isPageLoading: PropTypes.bool,
 };
 
 export default ChatInput;
